@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.devsuperior.bds04.dto.EventDTO;
@@ -46,9 +48,14 @@ public class EventService {
 
 	private void copyDTOToEntity(EventDTO dto, Event entity) {
 		entity.setName(dto.getName());
-		entity.setDate(dto.getDate());
 		entity.setUrl(dto.getUrl());
 		entity.setCity(new City(dto.getCityId(),null));
+		entity.setDate(dto.getDate());
+	}
+
+	public Page<EventDTO> findAll(PageRequest pageRequest) {
+		Page<Event> page = eventRepository.findAll(pageRequest);
+		return page.map(x -> new EventDTO(x));
 	}
 
 	
